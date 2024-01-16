@@ -20,7 +20,7 @@ const getStreamingCompletion = async (messages) => {
 };
 
 const app = express();
-const port = 3333;
+const port = process.env.PORT;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
