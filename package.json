@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon"
+    "start": "OPENAI_API_KEY=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 node app.js",
+    "start:dev": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,7 +15,6 @@
     "ai": "^2.2.31",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "openai": "^4.24.7"
   }
