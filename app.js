@@ -4,9 +4,11 @@ import cors from "cors";
 import OpenAI from "openai";
 // import dotenv from "dotenv";
 // dotenv.config();
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+const port = process.env.PORT || 3000;
 
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: OPENAI_API_KEY || "",
 });
 
 const getStreamingCompletion = async (messages) => {
@@ -20,11 +22,14 @@ const getStreamingCompletion = async (messages) => {
 };
 
 const app = express();
-const port = process.env.PORT;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://chat.katsuwin.info",
+  ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
 };
@@ -35,6 +40,9 @@ app.get("/", (req, res) => {
 });
 
 app.post("/api/chat", async (req, res) => {
+  if (!OPENAI_API_KEY) {
+    throw Error("OPENAI_API_KEY did not get");
+  }
   const messages = req.body.messages;
   const stream = await getStreamingCompletion(messages);
   for await (const part of stream) {
