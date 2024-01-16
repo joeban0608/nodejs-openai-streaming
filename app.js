@@ -2,24 +2,12 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import OpenAI from "openai";
-import { OpenAIStream, StreamingTextResponse } from "ai";
+import dotenv from "dotenv";
+dotenv.config();
 
-const API_KEY = "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";
 const client = new OpenAI({
-  apiKey: API_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 });
-
-// if (!API_KEY) {
-//   throw Error("OPENAI_API_KEY is not set");
-// }
-
-// const openai = new OpenAI({ API_KEY });
-
-const systemMessage = {
-  role: "system",
-  content:
-    "You are a Askbot. You are supposed to answer the questions asked by the users. Validate the prompts to be a question and it should not in approprite. Give funky responses",
-};
 
 const getStreamingCompletion = async (messages) => {
   const messagesTrunked = messages.slice(-6);
