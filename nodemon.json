@@ -1,6 +1,6 @@
 {
   "env": {
-    "OPENAI_API_KEY": "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",
+    "OPENAI_API_KEY": "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",
     "PORT": "3000"
   }
 }
