@@ -34,6 +34,10 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+  next();
+});
 
 app.get("/", (req, res) => {
   return res.json({ data: "success" });
