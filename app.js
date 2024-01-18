@@ -5,7 +5,7 @@ import OpenAI from "openai";
 // import dotenv from "dotenv";
 // dotenv.config();
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 
 const client = new OpenAI({
   apiKey: OPENAI_API_KEY || "",
@@ -28,22 +28,20 @@ const corsOptions = {
   origin: [
     "http://localhost:5173",
     "http://localhost:3000",
+    "http://localhost:4000",
     "https://chat.katsuwin.info",
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
-app.use((req, res, next) => {
-  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
-  next();
-});
-
 app.get("/", (req, res) => {
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
   return res.json({ data: "success" });
 });
 
 app.post("/api/chat", async (req, res) => {
+  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
   if (!OPENAI_API_KEY) {
     throw Error("OPENAI_API_KEY did not get");
   }
