@@ -40,7 +40,7 @@ app.get("/", (req, res) => {
   return res.json({ data: "success" });
 });
 
-app.post("/api/chat", async (req, res) => {
+app.post("/chat", async (req, res) => {
   res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
   if (!OPENAI_API_KEY) {
     throw Error("OPENAI_API_KEY did not get");
