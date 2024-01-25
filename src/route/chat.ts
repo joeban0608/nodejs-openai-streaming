@@ -1,18 +1,17 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
+import { Router } from "express";
 import OpenAI from "openai";
-// import dotenv from "dotenv";
-// dotenv.config();
+
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const port = process.env.PORT || 4000;
 
 const client = new OpenAI({
   apiKey: OPENAI_API_KEY || "",
 });
+const router = Router();
 
-const getStreamingCompletion = async (messages) => {
-  const messagesTrunked = messages.slice(-6);
+type ChatMessages = OpenAI.Chat.Completions.ChatCompletionMessageParam[];
+
+const getStreamingCompletion = async (chatMessages: ChatMessages) => {
+  const messagesTrunked = chatMessages.slice(-6);
   console.log("messagesTrunked", messagesTrunked);
   return client.chat.completions.create({
     model: "gpt-3.5-turbo",
@@ -21,26 +20,11 @@ const getStreamingCompletion = async (messages) => {
   });
 };
 
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://localhost:4000",
-    "https://chat.katsuwin.info",
-  ],
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-app.use(cors(corsOptions));
-app.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
-  return res.json({ data: "success" });
+  return res.json({ data: "hello, here is chat get response, success" });
 });
-
-app.post("/chat", async (req, res) => {
+router.post("/chat", async (req, res, next) => {
   res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
   if (!OPENAI_API_KEY) {
     throw Error("OPENAI_API_KEY did not get");
@@ -56,6 +40,4 @@ app.post("/chat", async (req, res) => {
   }
   res.end();
 });
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+export default router;
